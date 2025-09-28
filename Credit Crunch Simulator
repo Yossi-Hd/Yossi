@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Crunch Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+                /* Custom styling for large, prominent sliders */
+                .large-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 12px; /* Increased height for the whole component */
+            background: transparent; /* Hide default track */
+            cursor: pointer;
+        }
+        
+        /* WebKit (Chrome/Safari) Track */
+        .large-slider::-webkit-slider-runnable-track {
+            height: 6px; /* Track thickness */
+            background: #d1d5db; /* gray-300 */
+            border-radius: 3px;
+        }
+
+        /* WebKit (Chrome/Safari) Thumb */
+        .large-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px; /* Thumb size */
+            height: 24px;
+            border-radius: 50%;
+            background: #3b82f6; /* blue-600 */
+            border: 4px solid #fff; /* White border for contrast */
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            margin-top: -9px; /* Vertically align the thumb center with the track center */
+            transition: background-color 0.15s ease-in-out;
+        }
+        
+        .large-slider:focus::-webkit-slider-thumb {
+            background: #2563eb; /* blue-700 on focus */
+        }
+        
+        /* Mozilla (Firefox) Track */
+        .large-slider::-moz-range-track {
+            height: 6px;
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        /* Mozilla (Firefox) Thumb */
+        .large-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: 4px solid #fff;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- SQUARE POINTER STYLES (For Business Activity) --- */
+        .square-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 12px;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        /* WebKit (Chrome/Safari) Track */
+        .square-slider::-webkit-slider-runnable-track {
+            height: 6px; /* Track thickness */
+            background: #d1d5db; /* gray-300 */
+            border-radius: 3px;
+        }
+
+        /* WebKit (Chrome/Safari) Thumb (SQUARE) */
+        .square-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px; /* Thumb size */
+            height: 24px;
+            border-radius: 0; /* **SQUARE SHAPE** */
+            background: #3b82f6; /* blue-600 */
+            border: 4px solid #fff; /* White border for contrast */
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            margin-top: -9px; /* Vertically align the thumb center with the track center */
+            transition: background-color 0.15s ease-in-out;
+        }
+        
+        .square-slider:focus::-webkit-slider-thumb {
+            background: #2563eb; /* blue-700 on focus */
+        }
+        
+        /* Mozilla (Firefox) Track */
+        .square-slider::-moz-range-track {
+            height: 6px;
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        /* Mozilla (Firefox) Thumb (SQUARE) */
+        .square-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 0; /* **SQUARE SHAPE** */
+            background: #3b82f6;
+            border: 4px solid #fff;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- ROUND POINTER STYLES (For Age and Size) --- */
+        .round-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 12px;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        /* WebKit (Chrome/Safari) Track */
+        .round-slider::-webkit-slider-runnable-track {
+            height: 6px; /* Track thickness */
+            background: #d1d5db; /* gray-300 */
+            border-radius: 3px;
+        }
+
+        /* WebKit (Chrome/Safari) Thumb (ROUND) */
+        .round-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px; /* Thumb size */
+            height: 24px;
+            border-radius: 50%; /* **ROUND SHAPE** */
+            background: #3b82f6; /* blue-600 */
+            border: 4px solid #fff; /* White border for contrast */
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            margin-top: -9px; /* Vertically align the thumb center with the track center */
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .heading{
+            color: #941068;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg space-y-6">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold heading">מחשבון הסתברות למחנק אשראי</h1>
+            <p>
+                <hr #941068>
+            </p>
+            
+            <p class="mt-2 text-gray-600">הערכה לסיכויי העסק להיות במחנק אשראי</p>
+        </div>
+
+        <form id="loanForm" class="space-y-12">
+            <!-- Gender Input -->
+            <div class="space-y-1">
+                <label class="block text-sm font-bold text-gray-700">מגדר בעלי העסק</label>
+                <div class="flex space-x-4">
+                    <button type="button" id="maleBtn" data-value="male" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                        גבר
+                    </button>
+                    <button type="button" id="femaleBtn" data-value="female" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                        אישה
+                    </button>
+                </div>
+            </div>
+
+            <!-- Age of the Business Input -->
+            <div class="space-y-1">
+                <label for="businessAge" class="block text-sm font-bold text-gray-700">גיל העסק בשנים: <span id="businessAgeDisplay" class="font-semibold text-blue-600">&lt; 5 years</span></label>
+                <input type="range" id="businessAge" min="0" max="3" value="0" step="1" class="w-full large-slider appearance-none cursor-pointer">
+                <div class="grid grid-cols-4 w-full text-xs text-gray-500 mt-2">
+                    <span class="text-center"> עד 5 שנים</span>
+                    <span class="text-center">5-10 שנים</span>
+                    <span class="text-center">10-20 שנים</span>
+                    <span class="text-center"> מעל 20 שנים</span>
+                </div>
+            </div>
+
+            <!-- Size of the Business Input -->
+            <div class="space-y-1">
+                <label for="businessSize" class="block text-sm font-bold text-gray-700">גודל העסק (מס' עובדים): <span id="businessSizeDisplay" class="font-semibold text-blue-600">Self-employed</span></label>
+                <input type="range" id="businessSize" min="0" max="4" value="0" step="1" class="w-full large-slider appearance-none cursor-pointer">
+                <div class="grid grid-cols-5 w-full text-xs text-gray-500 mt-2">
+                    <span class="text-center">עצמאי (ללא מועסקים)</span>
+                    <span class="text-center">1-4 עובדים</span>
+                    <span class="text-center">5-19 עובדים</span>
+                    <span class="text-center">20-99 עובדים</span>
+                    <span class="text-center">מעל 100 עובדים</span>
+                </div>
+            </div>
+
+           
+            <!-- Business Activity Input (Updated to Slider) -->
+            <div class="space-y-1">
+                <label for="businessActivityInput" class="block text-sm font-bold text-gray-700">מצב פעילות העסק: <span id="businessActivityDisplay" class="font-semibold text-blue-600">Decrease</span></label>
+                <!-- Changed class to square-slider -->
+                <input type="range" id="businessActivityInput" min="0" max="2" value="0" step="1" class="w-full square-slider appearance-none cursor-pointer">
+                <div class="grid grid-cols-3 w-full text-xs text-gray-500 mt-2">
+                    <span class="text-center">ירד</span>
+                    <span class="text-center">ללא שינוי</span>
+                    <span class="text-center">עלה</span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                חישוב ההסתברות
+            </button>
+        </form>
+
+        <!-- Results Display Area -->
+        <div id="resultContainer" class="hidden text-center mt-6 p-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+            <p id="probabilityText" class="text-3xl font-bold text-gray-800"></p>
+            <p id="messageText" class="mt-2 text-gray-600"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('loanForm');
+            const resultContainer = document.getElementById('resultContainer');
+            const probabilityText = document.getElementById('probabilityText');
+            const messageText = document.getElementById('messageText');
+
+            const businessAgeInput = document.getElementById('businessAge');
+            const businessAgeDisplay = document.getElementById('businessAgeDisplay');
+            const businessSizeInput = document.getElementById('businessSize');
+            const businessSizeDisplay = document.getElementById('businessSizeDisplay');
+            
+            // Activity Slider elements
+            const businessActivityInput = document.getElementById('businessActivityInput');
+            const businessActivityDisplay = document.getElementById('businessActivityDisplay');
+
+            const maleBtn = document.getElementById('maleBtn');
+            const femaleBtn = document.getElementById('femaleBtn');
+            let selectedGender = null;
+
+            const businessAgeMap = {
+                0: { label: 'עד 5 שנים', value: 'less_than_5' },
+                1: { label: '5-10 שנים', value: '5_to_10' },
+                2: { label: '10-20 שנים', value: '10_to_20' },
+                3: { label: 'מעל 20 שנים', value: 'more_than_20' }
+            };
+
+            const businessSizeMap = {
+                0: { label: 'עצמאי ללא מועסקים', value: 'self_employed' },
+                1: { label: '1-4 מועסקים', value: '1_to_4' },
+                2: { label: '5-9 מועסקים', value: '5_to_19' },
+                3: { label: '20-99 מועסקים', value: '20_to_99' },
+                4: { label: '100 מועסקים או יותר', value: '100_or_more' }
+            };
+
+             // New Activity Map for the slider (0, 1, 2)
+             const businessActivityMap = {
+                0: { label: 'ירד', value: 'decrease' },
+                1: { label: 'ללא שינוי', value: 'no_change' },
+                2: { label: 'עלה', value: 'increase' }
+            };
+
+  
+
+            // The probability values based on the provided image.
+            const modelParameters = {
+                baseCase: 0.074,
+                genderCoeffs: { male: 0, female: -0.3857 }, // Female adds 5.2%
+                businessAgeCoeffs: { 'less_than_5': 0.6831, '5_to_10': 0.27, '10_to_20': -0.1508, more_than_20: 0 },
+                businessSizeCoeffs: { 'self_employed': 1.2782, '1_to_4': 0.8544, '5_to_19': 0.6575, '20_to_99': 0, '100_or_more': 0 },
+                businessActivityCoeffs: { increase: 0.0953, decrease: 0.6523, no_change: 0 }
+            };
+
+            // The new calculation function using direct addition.
+            function calculateProbability(gender, businessAge, businessSize, businessActivity) {
+                const { baseCase, genderCoeffs, businessAgeCoeffs, businessSizeCoeffs, businessActivityCoeffs } = modelParameters;
+                
+                // 1. Check if the current selection matches the exclusive Base Scenario:
+                // Male (0), > 20 years (0), 20-99 employees (0), No Change (0)
+                const isBaseScenario = (
+                    gender === 'male' &&
+                    businessAge === 'more_than_20' &&
+                    businessSize === '20_to_99' &&
+                    businessActivity === 'no_change'
+                );
+
+                let finalProbability;
+
+                if (isBaseScenario) {
+                    // If it is the exact base scenario, the probability is ONLY the baseCase value (7.4)
+                    finalProbability = baseCase; 
+                } else {
+                    // For all other scenarios, sum ONLY the individual coefficients
+                    finalProbability =
+                                    (1 / (1 + Math.exp(-(-2.53 +
+                                       (genderCoeffs[gender] || 0) +
+                                       (businessAgeCoeffs[businessAge] || 0) +
+                                       (businessSizeCoeffs[businessSize] || 0) +
+                                       (businessActivityCoeffs[businessActivity] || 0)))))
+                                       ;
+                }
+
+                return finalProbability;
+            }
+            
+                        // --- UI Helper Functions ---
+
+                        function setActiveButton(button) {
+                // Reset all gender buttons
+                maleBtn.classList.remove('bg-blue-600', 'text-white');
+                femaleBtn.classList.remove('bg-blue-600', 'text-white');
+                // Highlight selected button
+                button.classList.add('bg-blue-600', 'text-white');
+            }
+
+            // --- Event Listeners ---
+
+            // Update display on slider change
+            businessAgeInput.addEventListener('input', () => {
+                businessAgeDisplay.textContent = businessAgeMap[businessAgeInput.value].label;
+            });
+
+            businessSizeInput.addEventListener('input', () => {
+                businessSizeDisplay.textContent = businessSizeMap[businessSizeInput.value].label;
+            });
+
+            // Update activity display on slider change
+            businessActivityInput.addEventListener('input', () => {
+                businessActivityDisplay.textContent = businessActivityMap[businessActivityInput.value].label;
+            });
+
+
+            // Handle gender button selection
+            maleBtn.addEventListener('click', () => {
+                selectedGender = maleBtn.dataset.value;
+                setActiveButton(maleBtn);
+            });
+
+            femaleBtn.addEventListener('click', () => {
+                selectedGender = femaleBtn.dataset.value;
+                setActiveButton(femaleBtn);
+            });
+
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Get selected values
+                const gender = selectedGender;
+                const businessAge = businessAgeMap[businessAgeInput.value].value;
+                const businessSize = businessSizeMap[businessSizeInput.value].value;
+                // Get value from the new activity slider
+                const businessActivity = businessActivityMap[businessActivityInput.value].value; 
+                
+                // Validate inputs (only gender needs explicit validation as sliders have default values)
+                if (!gender) {
+                    messageText.textContent = "נא לבחור מגדר עבור החישוב";
+                    probabilityText.textContent = " ";
+                    resultContainer.classList.remove('hidden');
+                    // Reset styling to default if validation fails
+                    resultContainer.className = 'text-center mt-6 p-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50';
+                    return;
+                }
+
+                // Calculate the probability of a credit crunch
+                const crunchProbability = calculateProbability(gender, businessAge, businessSize, businessActivity);
+
+                // Ensure the probability stays between 0 and 100 for display
+                const clampedProbability = Math.max(0, Math.min(100, crunchProbability));
+                const crunchProbabilityPercentage = (100*clampedProbability).toFixed(1);
+                
+                // Determine the message based on the probability of a credit crunch
+                let message;
+                let textColor, borderColor;
+                if (clampedProbability > 0.50) {
+                    message = "לעסק סיכוי גבוה למחנק אשראי, מומלץ לשפר את המצב הפיננסי של העסק";
+                    textColor = 'text-red-600';
+                    borderColor = 'border-red-300';
+                } else if (clampedProbability > 0.20) {
+                    message = "סיכוי בינוני למחנק אשראי, העסק עשוי לעמוד בפני אתגרים";
+                    textColor = 'text-yellow-600';
+                    borderColor = 'border-yellow-300';
+                } else {
+                    message = "סיכוי נמוך למחנק אשראי, העסק במצב פיננסי טוב";
+                    textColor = 'text-green-600';
+                    borderColor = 'border-green-300';
+                }
+
+                // Update the UI with the result
+                probabilityText.textContent = `ההסתברות: ${crunchProbabilityPercentage}%`;
+                messageText.textContent = message;
+                resultContainer.classList.remove('hidden');
+
+                // Correctly apply class changes to container
+                resultContainer.classList.remove('border-red-300', 'border-yellow-300', 'border-green-300');
+                resultContainer.classList.add(borderColor);
+                
+                // Correctly apply class changes to text
+                probabilityText.classList.remove('text-red-600', 'text-yellow-600', 'text-green-600');
+                probabilityText.classList.add(textColor);
+            });
+        });
+    </script>
+
+</body>
+</html>
